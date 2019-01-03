@@ -25,28 +25,29 @@ class TelegramErrorLogger
                 $e = new \Exception();
                 $error = PHP_EOL;
                 $error .= '==========[Response]==========';
-                $error .= "\n";
+                $error .= "\r\n";
                 foreach ($result as $key => $value) {
                     if ($value == false) {
                         $error .= $key.":\t\t\tFalse\n";
                     } else {
-                        $error .= $key.":\t\t".$value."\n";
+                        $error .= $key.":\t\t".$value."\r\n";
                     }
                 }
                 $array = '=========[Sent Data]==========';
-                $array .= "\n";
+                $array .= "\r\n";
                 if ($use_rt == true) {
                     foreach ($content as $item) {
                         $array .= self::$self->rt($item).PHP_EOL.PHP_EOL;
                     }
                 } else {
                     foreach ($content as $key => $value) {
-                        $array .= $key.":\t\t".$value."\n";
+                        $array .= $key.":\t\t".$value."\r\n";
                     }
                 }
                 $backtrace = '============[Trace]===========';
-                $backtrace .= "\n";
-                $backtrace .= $e->getTraceAsString();
+                $backtrace .= "\r\n";
+					$separator = "\r\n";
+					$backtrace .= str_replace("\n", $separator, $e->getTraceAsString());				
                 self::$self->_log_to_file($error.$array.$backtrace);
             }
         } catch (\Exception $e) {
@@ -66,7 +67,7 @@ class TelegramErrorLogger
             $fileName = __CLASS__.'.txt';
             $myFile = fopen($fileName, 'a+');
             $date = '============[Date]============';
-            $date .= "\n";
+            $date .= "\r\n";
             $date .= '[ '.date('Y-m-d H:i:s  e').' ] ';
             fwrite($myFile, $date.$error_text."\n\n");
             fclose($myFile);
@@ -81,7 +82,7 @@ class TelegramErrorLogger
         $text = '';
         if ($head) {
             $text = "[$ref]";
-            $text .= "\n";
+            $text .= "\r\n";
         }
         foreach ($array as $key => $value) {
             if ($value instanceof CURLFile) {
